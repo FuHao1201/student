@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>首页</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <style>
+  .layui-layout-admin .layui-body{
+  	bottom:0px;
+  }
+  </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <div class="layui-logo">学生信息管理系统</div>
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+    <ul class="layui-nav layui-layout-right">
+      <li class="layui-nav-item">
+        <a href="javascript:;" id="name">
+        </a>
+        <dl class="layui-nav-child">
+          <dd><a href="">基本资料</a></dd>
+          <dd><a href="">修改密码</a></dd>
+          <hr>
+          <dd><a href="/userInfo/layout">退出登录</a></dd>
+        </dl>
+      </li>
+      <li class="layui-nav-item" style="width:220px;"><a id="date"></a></li>
+    </ul>
+  </div>
+  
+  <div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+        <li class="layui-nav-item"><a href="" target="main">用户管理</a></li>
+        <li class="layui-nav-item"><a href="" target="main">学院管理</a></li>
+        <li class="layui-nav-item"><a href="" target="main">专业管理</a></li>
+        <li class="layui-nav-item"><a href="" target="main">学生管理</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="layui-body">
+    <!-- 内容主体区域 -->
+    <iframe src="/userInfo/main" name="main" id="main" width="100%" height="94%" style="padding: 15px;padding-buttom: 0px;"></iframe>
+  </div>
+</div>
+<script src="/layui/layui.js"></script>
+<script type="text/javascript" src="/js/home.js"></script>
+</body>
+</html>

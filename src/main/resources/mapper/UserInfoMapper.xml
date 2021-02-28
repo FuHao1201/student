@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.student.dao.UserInfoDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.project.student.domain.UserInfo">
+        <id column="id" property="id" />
+        <result column="avatar" property="avatar" />
+        <result column="login_name" property="loginName" />
+        <result column="password" property="password" />
+        <result column="user_name" property="userName" />
+        <result column="enable_flag" property="enableFlag" />
+        <result column="delete_flag" property="deleteFlag" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="last_update_time" property="lastUpdateTime" />
+        <result column="last_update_by" property="lastUpdateBy" />
+    </resultMap>
+</mapper>
