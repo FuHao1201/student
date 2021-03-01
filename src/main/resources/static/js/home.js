@@ -19,10 +19,14 @@ layui.use(['form' ,'layer' ,'element'], function() {
 	   $.get("/userInfo/getLoginUser",{},function(res){
 		   console.log(res)
 		   let head = '/images/head.gif';
-		   if (res.data.avatar != null && res.data.avatar != ''){
-		   		head = res.data.avatar;
+		   if (res.data != null){
+			   if (res.data.avatar != null && res.data.avatar != ''){
+				   head = res.data.avatar;
+			   }
+			   $("#name").html("<img src="+head+" class='layui-nav-img'>"+res.data.userName);
+		   }else {
+			   $("#mine").hide();
 		   }
-		   $("#name").html("<img src="+head+" class='layui-nav-img'>"+res.data.userName);
 	   })
    };
    $(function(){

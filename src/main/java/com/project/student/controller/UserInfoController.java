@@ -1,28 +1,24 @@
 package com.project.student.controller;
 
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.SecureUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.project.student.common.BaseController;
-import com.project.student.common.GlobalConstants;
-import com.project.student.common.JsonResult;
+import com.project.student.common.*;
 import com.project.student.domain.UserInfo;
 import com.project.student.service.UserInfoService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 /**
  * <p>
@@ -86,10 +82,9 @@ public class UserInfoController extends BaseController {
      */
     @GetMapping("/getLoginUser")
     public JsonResult<UserInfo> getLoginUser() {
-        String loginName = (String) SecurityUtils.getSubject().getPrincipal();
-        UserInfo userInfo = userInfoService.getOne(new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getLoginName,loginName).eq(UserInfo::getEnableFlag,1).eq(UserInfo::getDeleteFlag,0));
-        if (ObjectUtil.isNotEmpty(userInfo)){
-            return jr(GlobalConstants.SUCCESS,"查询成功",userInfo);
+        UserContext userContext = CurrentUser.getUser();
+        if (ObjectUtil.isNotEmpty(userContext.getUserInfo())){
+            return jr(GlobalConstants.SUCCESS,"查询成功",userContext.getUserInfo());
         }
         return jr(GlobalConstants.ERROR,"查询失败");
     }
@@ -101,6 +96,28 @@ public class UserInfoController extends BaseController {
     @GetMapping("/layout")
     public ModelAndView layout() {
         SecurityUtils.getSubject().logout();
-        return new ModelAndView("/");
+        return new ModelAndView("");
+    }
+
+    /**
+     * 跳转用户有关的界面
+     * @return 界面
+     */
+    @GetMapping("/listPagedUserPage")
+    public ModelAndView listPagedUserPage() {
+        return view("user/listPagedUser");
+    }
+
+    /**
+     * 跳转用户有关的界面
+     * @return 界面
+     */
+    @GetMapping("/listPagedUser")
+    public JsonResult<List<UserInfo>> listPagedUser(UserInfo userInfo) {
+        List<UserInfo> userInfoList = userInfoService.list();
+        if (CollUtil.isEmpty(userInfoList)){
+            return jr(GlobalConstants.ERROR,"查询失败");
+        }
+        return jr("0","查询成功",userInfoList);
     }
 }

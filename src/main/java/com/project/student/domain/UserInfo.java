@@ -2,6 +2,7 @@ package com.project.student.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -49,6 +50,7 @@ public class UserInfo implements Serializable {
     /**
      * 是否删除（Y:删除N:未删除）
      */
+    @TableLogic
     private String deleteFlag;
 
     /**

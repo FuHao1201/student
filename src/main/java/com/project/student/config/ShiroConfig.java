@@ -26,6 +26,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/layui/**","anon");//layui文件不需要进行认证
         filterChainDefinitionMap.put("/js/**","anon");//js文件不需要认证
         filterChainDefinitionMap.put("/images/**","anon");//images文件不需要认证
+        filterChainDefinitionMap.put("/favicon.ico","anon");//图标不需要认证
         filterChainDefinitionMap.put("/**","authc");
         //设置注销的url
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);//把设置好的过滤设置到ShiroFilterFactoryBean

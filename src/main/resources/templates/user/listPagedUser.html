@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>用户列表</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+</head>
+<body>
+<div class="form-search-con layui-bg-white layui-fluid">
+    <div class="layui-row layui-col-md-offset2">
+        <form class="layui-form" id="searchForm" autocomplete="off">
+            <br>
+            <div class="layui-form-item">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">姓名：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" placeholder="姓名" name="userName" autocomplete="off" class="layui-input" width="60px">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <button type="button" class="layui-btn" lay-submit lay-filter="SearchForm">查询</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<table class="layui-table" lay-data="{height:520, url:'/userInfo/listPagedUser', page:true, id:'user',toolbar:'#tableToolbar',defaultToolbar: []}" lay-filter="user">
+    <thead>
+    <tr>
+        <th lay-data="{type:'checkbox'}"></th>
+        <th lay-data="{type:'numbers', width:80}">序号</th>
+        <th lay-data="{field:'loginName',align:'center'}">登录名</th>
+        <th lay-data="{field:'userName',align:'center'}">姓名</th>
+        <th lay-data="{field:'enableFlag',align:'center',templet: '#enable'}">启用状态</th>
+        <th lay-data="{toolbar:'#toolbar', align:'center', fixed:'right'}">操作</th>
+    </tr>
+    </thead>
+</table>
+<script type="text/javascript" src="/layui/layui.js"></script>
+<script type="text/javascript" src="/js/user-list.js"></script>
+</body>
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-xs" lay-event="update">修改</button>
+        <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove">删除</button>
+    </div>
+</script>
+<script type="text/html" id="tableToolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">新增人员</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="removeBatch">删除人员</button>
+    </div>
+</script>
+<script type="text/html" id="enable">
+    <!-- 这里的 checked 的状态只是演示 -->
+    <input type="checkbox" name="enableFlag" value="{{d.enableFlag}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="enableFlag" {{ d.enableFlag == 1 ? 'checked' : '' }}/>
+</script>
+</html>
