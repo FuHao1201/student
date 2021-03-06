@@ -3,6 +3,7 @@ package com.project.student.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.project.student.domain.UserInfo;
 import com.project.student.dao.UserInfoDao;
+import com.project.student.dto.UserInfoPage;
 import com.project.student.service.UserInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import org.springframework.util.ObjectUtils;
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> implements UserInfoService {
 
     @Override
-    public UserInfo login(String loginName) {
-        return this.getOne(new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getLoginName,loginName));
+    public UserInfoPage listPagedUser(UserInfoPage userInfoPage) {
+        return getBaseMapper().listPagedUser(userInfoPage);
     }
 }
