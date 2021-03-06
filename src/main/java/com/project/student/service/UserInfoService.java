@@ -2,6 +2,7 @@ package com.project.student.service;
 
 import com.project.student.domain.UserInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.project.student.dto.UserInfoPage;
 
 /**
  * <p>
@@ -14,9 +15,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface UserInfoService extends IService<UserInfo> {
 
     /**
-     * 登录
-     * @param loginName 登录名
-     * @return
+     * 用户列表分页
+     * @param userInfoPage 参数
+     * @return 分页列表
      */
-    UserInfo login(String loginName);
+    UserInfoPage listPagedUser(UserInfoPage userInfoPage);
 }

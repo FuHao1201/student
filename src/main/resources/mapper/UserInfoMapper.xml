@@ -16,4 +16,20 @@
         <result column="last_update_time" property="lastUpdateTime" />
         <result column="last_update_by" property="lastUpdateBy" />
     </resultMap>
+
+    <!-- 分页列表查询映射结果 -->
+    <resultMap id="BaseResultPageMap" type="com.project.student.domain.UserInfo" extends="BaseResultMap">
+
+    </resultMap>
+
+    <select id="listPagedUser" resultMap="BaseResultPageMap">
+        select * from user_info a
+        <where>
+            1 = 1
+            <if test="loginName != '' and loginName != null">
+                <bind name="loginName_pattern" value="'%' + loginName + '%'"/>
+                 and a.login_name like #{loginName_pattern}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.project.student.common.*;
 import com.project.student.domain.UserInfo;
+import com.project.student.dto.UserInfoPage;
 import com.project.student.service.UserInfoService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -96,7 +97,7 @@ public class UserInfoController extends BaseController {
     @GetMapping("/layout")
     public ModelAndView layout() {
         SecurityUtils.getSubject().logout();
-        return new ModelAndView("");
+        return new ModelAndView("index");
     }
 
     /**
@@ -113,11 +114,11 @@ public class UserInfoController extends BaseController {
      * @return 界面
      */
     @GetMapping("/listPagedUser")
-    public JsonResult<List<UserInfo>> listPagedUser(UserInfo userInfo) {
-        List<UserInfo> userInfoList = userInfoService.list();
-        if (CollUtil.isEmpty(userInfoList)){
+    public JsonResult<UserInfoPage> listPagedUser(UserInfoPage userInfoPage) {
+        UserInfoPage page = userInfoService.listPagedUser(userInfoPage);
+        if (CollUtil.isEmpty(page.getRecords())){
             return jr(GlobalConstants.ERROR,"查询失败");
         }
-        return jr("0","查询成功",userInfoList);
+        return jr("0","查询成功",page);
     }
 }

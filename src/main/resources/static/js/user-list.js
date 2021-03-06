@@ -40,6 +40,7 @@ layui.use(['form' ,'table' ,'layer', 'laytpl'], function() {
                     layout: ['prev','page', 'next','count',],
                 },where: {
                     userName : data.field.userName,
+                    loginName : data.field.loginName,
                     tel : data.field.tel,
                     page : '1'
                 }
@@ -109,8 +110,8 @@ layui.use(['form' ,'table' ,'layer', 'laytpl'], function() {
                 return {
                     "code": res.code, //解析接口状态
                     "msg": res.message, //解析提示文本
-                    "count": res.data.length, //解析数据长度
-                    "data": res.data, //解析数据列表
+                    "count": res.data.total, //解析数据长度
+                    "data": res.data.records, //解析数据列表
                 };
             }
         });
