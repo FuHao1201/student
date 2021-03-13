@@ -151,11 +151,17 @@ public class UserInfoController extends BaseController {
         String fileName = file[0].getOriginalFilename();
         try {
             //上传目录地址
-            String uploadDir= ResourceUtils.getURL("classpath:").getPath()+"static/upload/image/";
+            String uploadDir= ResourceUtils.getURL("classpath:").getPath()+"static/upload/";
             //如果目录不存在，自动创建文件夹
             File dir = new File(uploadDir);
             if(!dir.exists()) {
                 dir.mkdir();
+            }
+            uploadDir += "image/";
+            //如果目录不存在，自动创建文件夹
+            File dirImg = new File(uploadDir);
+            if(!dirImg.exists()) {
+                dirImg.mkdir();
             }
             executeUpload(uploadDir, file[0]);
         } catch (Exception e) {
