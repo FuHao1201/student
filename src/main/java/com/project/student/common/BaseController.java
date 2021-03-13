@@ -3,9 +3,11 @@ package com.project.student.common;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -90,6 +92,25 @@ public abstract class BaseController{
 		ModelAndView modelAndView = new ModelAndView(view);
 		modelAndView.addObject(modelObject);
 		return modelAndView;
+	}
+
+
+	/**
+	 * 提取上传方法为公共方法
+	 * @param uploadDir 上传文件目录
+	 * @param file 上传对象
+	 * @throws Exception
+	 */
+	protected void executeUpload(String uploadDir, MultipartFile file) throws Exception
+	{
+		//文件后缀名
+		String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+		//上传文件名
+		String filename = file.getOriginalFilename();
+		//服务器端保存的文件对象
+		File serverFile = new File(uploadDir + filename);
+		//将上传的文件写入到服务器端文件内
+		file.transferTo(serverFile);
 	}
 }
 

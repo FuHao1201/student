@@ -20,4 +20,10 @@ public interface UserInfoService extends IService<UserInfo> {
      * @return 分页列表
      */
     UserInfoPage listPagedUser(UserInfoPage userInfoPage);
+
+    /**
+     * 保存头像并修改登录信息
+     * @param avatar 头像
+     */
+    void saveOrUpdateHead(String avatar);
 }
