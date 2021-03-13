@@ -8,6 +8,14 @@ layui.use(['form' ,'layer' ,'element'], function() {
     	getDate();
     	getLoginName();
     };
+	$("#myInfo").on('click',function(){//个人资料点击监听
+		_layer.open({
+			type: 2,
+			area: ['36%' , '40%'],
+			resize: false,
+			content: '/userInfo/myInfoPage',
+		});
+	});
     function getDate(){//获取当前日期
     	var date = new Date();
     	var str = "" + date.getFullYear() + "年";
@@ -17,7 +25,6 @@ layui.use(['form' ,'layer' ,'element'], function() {
    };
    function getLoginName(){//获取用户信息
 	   $.get("/userInfo/getLoginUser",{},function(res){
-		   console.log(res)
 		   let head = '/images/head.gif';
 		   if (res.data != null){
 			   if (res.data.avatar != null && res.data.avatar != ''){

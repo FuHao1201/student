@@ -1,0 +1,12 @@
+.headDiv {
+    float: right;
+    position: fixed;
+    width: 20%;
+    right: 0;
+    padding-right: 10px;
+}
+.headDiv img{
+    width: 110px;
+    height: 100px;
+    margin-bottom: 10px;
+}

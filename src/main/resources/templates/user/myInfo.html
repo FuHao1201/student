@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>个人资料</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/common.css" media="all">
+</head>
+<style>
+    .layui-form {
+        padding-top: 15px;
+    }
+</style>
+<body>
+<div class="form-search-con layui-bg-white layui-fluid">
+    <div class="layui-row layui-col-md-offset2">
+        <form class="layui-form" autocomplete="off">
+            <input type="hidden" name="id" th:value="${user.id}">
+            <div class="headDiv">
+                <img id="head" th:src="${user.avatar != null ? user.avatar:'/images/head.gif'}">
+                <button type="button" class="layui-btn" id="uploadHead">
+                    <i class="layui-icon">&#xe67c;</i>上传头像
+                </button>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">登录名：</label>
+                    <div class="layui-input-inline">
+                        <input th:value="${user.loginName}" lay-verify="required" type="text" placeholder="登录名" name="loginName" autocomplete="off" class="layui-input" width="60px">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">姓名：</label>
+                    <div class="layui-input-inline">
+                        <input th:value="${user.userName}" lay-verify="required" type="text" placeholder="姓名" name="userName" autocomplete="off" class="layui-input" width="60px">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="width: 50%;">
+                    <button class="layui-btn" style="width:190px;" lay-submit lay-filter="update">修改</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" src="/layui/layui.js"></script>
+<script>
+    layui.use(['upload','form','layer'], function(){
+        var _upload = layui.upload, _form = layui.form, _layer = layui.layer;
+        var $ = layui.$;
+        //上传头像
+        var uploadInst = _upload.render({
+            elem: '#uploadHead' //绑定元素
+            ,url: '/userInfo/uploadHead' //上传接口
+            ,accept: 'images'
+            ,done: function(res){
+                //上传完毕回调
+                console.log(res)
+                if(res.code == "SUCCESS"){
+                    _layer.msg(res.message,{icon: 1});
+                    $("#head").attr("src", res.data);
+                }else{
+                    _layer.msg(res.message,{icon: 2});
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+        _form.on("submit(update)",function (data) {//修改提交点击监听
+            $.post("/userInfo/updateMyInfo",data.field,function(res) {
+                console.log(res)
+                if(res.code == "SUCCESS"){
+                    _layer.msg(res.message,{icon: 1});
+                }else{
+                    _layer.msg(res.message,{icon: 2});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

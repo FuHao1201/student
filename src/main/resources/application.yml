@@ -6,7 +6,7 @@ spring:
     name: student
     url: jdbc:mysql://localhost:3306/student?useSSL=false
     username: root
-    password: root
+    password:
   mvc:
     static-path-pattern: /**
   resources:
@@ -24,3 +24,15 @@ devtools:
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.project.student.domain
+  global-config:
+    db-config:
+      logic-delete-value: Y # 逻辑已删除值(默认为 Y)
+      logic-not-delete-value: N # 逻辑未删除值(默认为 N)
+logging:
+  level:
+    com.project.student: debug
+    com.baomidou: info
+    org.springframework: info
+    org.thymeleaf: info
+  file:
+    path: ./src/main/resources/log
