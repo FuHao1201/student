@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
  * <p>
- *  分页参数类1
+ *  分页参数类
  * </p>
  *
  * @author YL

@@ -10,6 +10,7 @@ import com.project.student.common.*;
 import com.project.student.domain.UserInfo;
 import com.project.student.dto.UserInfoPage;
 import com.project.student.service.UserInfoService;
+import com.sun.istack.internal.NotNull;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 /**
  * <p>
@@ -116,6 +118,15 @@ public class UserInfoController extends BaseController {
     public ModelAndView listPagedUserPage() {
         return view("user/listPagedUser");
     }
+    /**
+     * 修改用户页面
+     * @return 界面
+     */
+    @GetMapping("/editUserPage")
+    public ModelAndView userUpdata(int id) {
+
+        return view("user/userUpdata");
+    }
 
     /**
      * 用户列表
@@ -198,4 +209,18 @@ public class UserInfoController extends BaseController {
         }
         return jr(GlobalConstants.ERROR,"修改失败");
     }
+
+    /**
+     *
+     * @param ids
+     * @return
+     */
+    @PostMapping("/removeUser")
+    public JsonResult removeUser(@NotNull @RequestParam(value = "ids[]") String[] ids){
+        if(userInfoService.removeByIds(Arrays.asList(ids))) {
+            return jr(GlobalConstants.SUCCESS,"删除成功");
+        }
+        return jr(GlobalConstants.ERROR,"删除失败");
+    }
+
 }
