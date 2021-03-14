@@ -71,7 +71,7 @@
             }
         });
         _form.on("submit(update)",function (data) {//修改提交点击监听
-            $.post("/userInfo/updateMyInfo",data.field,function(res) {
+            $.post("/userInfo/updateUserInfo",data.field,function(res) {
                 console.log(res)
                 if(res.code == "SUCCESS"){
                     _layer.msg(res.message,{icon: 1});

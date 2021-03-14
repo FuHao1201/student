@@ -10,3 +10,14 @@
     height: 100px;
     margin-bottom: 10px;
 }
+.eye {
+    cursor: pointer;
+    float: right;
+    margin-right:180px;
+    display:none;
+    margin-top: 5px;
+}
+.eye img{
+    width: 30px;
+    height: 30px;
+}

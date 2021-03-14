@@ -12,6 +12,8 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 /**
  * <p>
  *  服务实现类
@@ -33,6 +35,36 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
         UserInfo userInfo = CurrentUser.getUser().getUserInfo();
         userInfo.setAvatar(avatar);
         this.saveOrUpdate(userInfo);
+        updateLoginUser(userInfo);
+    }
+
+    @Override
+    public void changePass(UserInfo userInfo) {
+        userInfo.setLastUpdateBy(CurrentUser.getUser().getUserInfo().getId());
+        userInfo.setLastUpdateTime(LocalDateTime.now());
+        saveOrUpdate(userInfo);
+        updateLoginUser(userInfo);
+    }
+
+    @Override
+    public boolean saveOrUpdateUserInfo(UserInfo userInfo) {
+        userInfo.setLastUpdateBy(CurrentUser.getUser().getUserInfo().getId());
+        userInfo.setLastUpdateTime(LocalDateTime.now());
+        saveOrUpdate(userInfo);
+        //如果修改的是当前登录人的信息，则需要更新登录信息
+        if (ObjectUtil.equal(userInfo.getId(),CurrentUser.getUser().getUserInfo().getId())){
+            UserInfo user = this.getById(userInfo.getId());
+            updateLoginUser(user);
+        }
+        return true;
+    }
+
+    /**
+     * 修改登录人信息
+     * @param userInfo 登录人信息
+     */
+    public void updateLoginUser(UserInfo userInfo) {
+        //修改登录人信息
         UserContext userContextNew = new UserContext();
         userContextNew.setUserInfo(userInfo);
         UserContext userContext = (UserContext) SecurityUtils.getSubject().getPrincipal();

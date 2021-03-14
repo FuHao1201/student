@@ -26,4 +26,16 @@ public interface UserInfoService extends IService<UserInfo> {
      * @param avatar 头像
      */
     void saveOrUpdateHead(String avatar);
+
+    /**
+     * 修改登录人密码
+     * @param userInfo 用户信息
+     */
+    void changePass(UserInfo userInfo);
+
+    /**
+     *
+     * @param userInfo
+     */
+    boolean saveOrUpdateUserInfo(UserInfo userInfo);
 }

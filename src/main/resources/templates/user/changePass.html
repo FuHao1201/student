@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>密码修改</title>
+<link rel="stylesheet" href="/layui/css/layui.css">
+<link rel="stylesheet" href="/css/common.css">
+</head>
+<body>
+<br>
+<form class="layui-form" action="">
+  <div class="layui-form-item">
+    <label class="layui-form-label">原密码：</label>
+    <a id="eye_old" class="eye"><img src="/images/closeEye.png"></a>
+    <div class="layui-input-inline">
+      <input id="password_old" name="password_old" lay-verify="required|password" placeholder="请输入原密码" autocomplete="off" type="password" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">新密码：</label>
+    <a id="eye_new" class="eye"><img src="/images/closeEye.png"></a>
+    <div class="layui-input-inline">
+      <input id="password_new" name="password_new" lay-verify="required|password" placeholder="请输入新密码" autocomplete="off" type="password" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">确认密码：</label>
+    <a id="eye_confirm" class="eye"><img src="/images/closeEye.png"></a>
+    <div class="layui-input-inline">
+      <input id="password_confirm" name="password_confirm" lay-verify="required|password" placeholder="请再次输入新密码" autocomplete="off" type="password" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit lay-filter="changePass">确认修改</button>
+    </div>
+  </div>
+</form>
+</body>
+<script type="text/javascript" src="/layui/layui.js"></script>
+<script>
+  layui.use(['form','layer'], function() {
+    var _form = layui.form,_layer = layui.layer;
+    var $ = layui.$;
+    $("#password_old").on("input",function(e){
+      //获取input输入的值
+      console.log(e.delegateTarget.value);
+      if(e.delegateTarget.value != ''){
+        $("#eye_old").css('display','block');
+      }else{
+        $("#eye_old").css('display','none');
+      }
+    });
+    $("#password_new").on("input",function(e){
+      //获取input输入的值
+      if(e.delegateTarget.value != ''){
+        $("#eye_new").css('display','block');
+      }else{
+        $("#eye_new").css('display','none');
+      }
+    });
+    $("#password_confirm").on("input",function(e){
+      //获取input输入的值
+      if(e.delegateTarget.value != ''){
+        $("#eye_confirm").css('display','block');
+      }else{
+        $("#eye_confirm").css('display','none');
+      }
+    });
+    $("#eye_old").click(function(){
+      if($("#password_old").attr("type") == "password"){
+        $("#password_old").attr("type","text");
+        $("#eye_old img").attr("src","/images/openEye.png");
+      }else{
+        $("#password_old").attr("type","password");
+        $("#eye_old img").attr("src","/images/closeEye.png");
+      }
+    });
+    $("#eye_new").click(function(){
+      if($("#password_new").attr("type") == "password"){
+        $("#password_new").attr("type","text");
+        $("#eye_new img").attr("src","/images/openEye.png");
+      }else{
+        $("#password_new").attr("type","password");
+        $("#eye_new img").attr("src","/images/closeEye.png");
+      }
+    });
+    $("#eye_confirm").click(function(){
+      if($("#password_confirm").attr("type") == "password"){
+        $("#password_confirm").attr("type","text");
+        $("#eye_confirm img").attr("src","/images/openEye.png");
+      }else{
+        $("#password_confirm").attr("type","password");
+        $("#eye_confirm img").attr("src","/images/closeEye.png");
+      }
+    });
+    _form.verify({//自定义验证
+      password: [
+        /^[\S]{6,12}$/
+        ,'密码必须6到12位，且不能出现空格'
+      ]
+    });
+    _form.on('submit',function(data){//修改密码点击监听
+      var password_old = data.field.password_old;
+      var password_new = data.field.password_new;
+      var password_confirm = data.field.password_confirm;
+      if(password_new != password_confirm){
+        _layer.msg("两次新密码输入不一致",{
+          icon: 2,
+        });
+        return;
+      }
+      let dataPass = {
+        oldPassWord : password_old,
+        newPassWord : password_new
+      };
+      $.post("/userInfo/changePass", dataPass, function (res) {
+        console.log(res)
+        if(res.code == "SUCCESS"){
+          _layer.msg(res.message,{icon: 1});
+        }else{
+          _layer.msg(res.message,{icon: 2});
+        }
+      })
+      return false;
+    });
+  })
+</script>
+</html>

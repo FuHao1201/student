@@ -16,6 +16,14 @@ layui.use(['form' ,'layer' ,'element'], function() {
 			content: '/userInfo/myInfoPage',
 		});
 	});
+	$("#changePass").on('click',function(){//修改密码点击监听
+		_layer.open({
+			type: 2,
+			area: ['34%' , '40%'],
+			resize: false,
+			content: '/userInfo/changePassPage',
+		});
+	});
     function getDate(){//获取当前日期
     	var date = new Date();
     	var str = "" + date.getFullYear() + "年";
