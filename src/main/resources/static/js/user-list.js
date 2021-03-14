@@ -55,6 +55,16 @@ layui.use(['form' ,'table' ,'layer', 'laytpl'], function() {
     function add() { //新增
     };
     function edit(id) { //编辑
+        layer.open({
+            type: 1,  //可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
+            title: ['我是标题', 'font-size:18px; color:orange;'],//数组第二项可以写任意css样式；如果你不想显示标题栏，你可以title: false
+            area: '500px',
+            content: $('#show_div')
+        });
+        // _layer.open({
+        //     type: 2,
+        //     content: '/userInfo/editUserPage?id='+id,
+        // })
     };
     function remove(ids) { //删除
         if(!$.isArray(ids)) {
@@ -63,7 +73,7 @@ layui.use(['form' ,'table' ,'layer', 'laytpl'], function() {
         _layer.confirm('确认是否删除？', {
             btn: ['确认','取消'] //按钮
         }, function(){
-            $.post("", {ids:ids}, function(res){
+            $.post("/userInfo/removeUser", {ids:ids}, function(res){
                 var msg = res.message;
                 _layer.msg(msg, {icon: 1});
                 reload();
