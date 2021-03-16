@@ -30,6 +30,10 @@
                 <bind name="loginName_pattern" value="'%' + loginName + '%'"/>
                  and a.login_name like #{loginName_pattern}
             </if>
+            <if test="userName != '' and userName != null">
+                <bind name="userName_pattern" value="'%' + userName + '%'"/>
+                and a.user_name like #{userName_pattern}
+            </if>
         </where>
     </select>
 </mapper>

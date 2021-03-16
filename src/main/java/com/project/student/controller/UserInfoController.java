@@ -27,6 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 /**
@@ -142,13 +143,13 @@ public class UserInfoController extends BaseController {
     }
 
     /**
-     * 上传头像
+     * 上传头像(修改个人资料)
      * @return
      */
     @PostMapping("/uploadHead")
     public JsonResult<String> uploadHead(HttpServletRequest request, MultipartFile[] file) {
         //获得文件名字
-        String fileName = file[0].getOriginalFilename();
+        String fileName;
         try {
             //上传目录地址
             String uploadDir= ResourceUtils.getURL("classpath:").getPath()+"static/upload/";
@@ -163,7 +164,7 @@ public class UserInfoController extends BaseController {
             if(!dirImg.exists()) {
                 dirImg.mkdir();
             }
-            executeUpload(uploadDir, file[0]);
+            fileName = executeUpload(uploadDir, file[0]);
         } catch (Exception e) {
             return jr(GlobalConstants.ERROR,"上传失败");
         }
@@ -194,7 +195,7 @@ public class UserInfoController extends BaseController {
     }
 
     /**
-     *
+     * 删除用户
      * @param ids
      * @return
      */
@@ -217,6 +218,8 @@ public class UserInfoController extends BaseController {
 
     /**
      * 修改本人密码
+     * @param oldPassWord 旧密码
+     * @param newPassWord 新密码
      * @return
      */
     @PostMapping("/changePass")
@@ -228,5 +231,112 @@ public class UserInfoController extends BaseController {
         userInfo.setPassword(SecureUtil.md5(newPassWord));
         userInfoService.changePass(userInfo);
         return jr(GlobalConstants.SUCCESS,"密码修改成功");
+    }
+
+    /**
+     * 编辑用户页跳转
+     * @param model
+     * @param id 用户id
+     * @return
+     */
+    @GetMapping("/addOrUpdateUserPage")
+    public ModelAndView addOrUpdateUserPage(ModelMap model, Integer id) {
+        if (ObjectUtil.isNotEmpty(id)){
+            UserInfo userInfo = userInfoService.getById(id);
+            model.put("user", userInfo);
+        }else {
+            model.put("user", new UserInfo());
+        }
+        return view("user/addOrUpdateUser", model);
+    }
+
+    /**
+     * 上传用户头像
+     * @return
+     */
+    @PostMapping("/uploadUserHead")
+    public JsonResult<String> uploadUserHead(HttpServletRequest request, MultipartFile[] file) {
+        //获得文件名字
+        String fileName;
+        try {
+            //上传目录地址
+            String uploadDir= ResourceUtils.getURL("classpath:").getPath()+"static/upload/";
+            //如果目录不存在，自动创建文件夹
+            File dir = new File(uploadDir);
+            if(!dir.exists()) {
+                dir.mkdir();
+            }
+            uploadDir += "image/";
+            //如果目录不存在，自动创建文件夹
+            File dirImg = new File(uploadDir);
+            if(!dirImg.exists()) {
+                dirImg.mkdir();
+            }
+            fileName = executeUpload(uploadDir, file[0]);
+        } catch (Exception e) {
+            return jr(GlobalConstants.ERROR,"上传失败");
+        }
+        // 将头像路径保存到数据库
+        String url= "/upload/image/"+fileName;
+        return jr(GlobalConstants.SUCCESS,"上传成功", url);
+    }
+
+    /**
+     * 新增/修改用户信息
+     * @param userInfo 用户信息
+     * @return
+     */
+    @PostMapping("/addOrUpdateUser")
+    @ResponseBody
+    public JsonResult addOrUpdateUser(UserInfo userInfo) {
+        if (ObjectUtil.isNotEmpty(userInfo.getId())){
+            UserInfo userInfoOld = userInfoService.getById(userInfo.getId());
+            if (!StrUtil.equals(userInfo.getLoginName(),userInfoOld.getLoginName())){
+                //验证登录名是否已被使用
+                UserInfo user = userInfoService.getOne(new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getLoginName, userInfo.getLoginName()).eq(UserInfo::getDeleteFlag,BooleanEnum.NO.getCode()));
+                if (user != null){
+                    return jr(GlobalConstants.ERROR,"登录名已被使用");
+                }
+            }
+        }else {
+            //验证登录名是否已被使用
+            UserInfo user = userInfoService.getOne(new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getLoginName, userInfo.getLoginName()).eq(UserInfo::getDeleteFlag,BooleanEnum.NO.getCode()));
+            if (user != null){
+                return jr(GlobalConstants.ERROR,"登录名已被使用");
+            }
+        }
+        if (userInfoService.saveOrUpdateUserInfo(userInfo)){
+            return jr(GlobalConstants.SUCCESS,"编辑用户成功");
+        }
+        return jr(GlobalConstants.ERROR,"编辑用户失败");
+    }
+
+    /**
+     * 修改用户启用状态
+     * @param id 用户id
+     * @param enableFlag 原启用状态
+     * @return
+     */
+    @PostMapping("/updateEnableFlag")
+    public JsonResult updateEnableFlag(Integer id, String enableFlag) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(id);
+        String successMsg = "";
+        String errorMsg = "";
+        if (StrUtil.equals(enableFlag,BooleanEnum.YES.getCode())){
+            userInfo.setEnableFlag(BooleanEnum.NO.getCode());
+            successMsg = "禁用成功";
+            errorMsg = "禁用失败";
+        }else {
+            userInfo.setEnableFlag(BooleanEnum.YES.getCode());
+            successMsg = "启用成功";
+            errorMsg = "启用失败";
+        }
+        userInfo.setLastUpdateBy(CurrentUser.getUser().getUserInfo().getId());
+        userInfo.setLastUpdateTime(LocalDateTime.now());
+        if (userInfoService.saveOrUpdate(userInfo)){
+            return jr(GlobalConstants.SUCCESS,successMsg,userInfo.getEnableFlag());
+        };
+        return jr(GlobalConstants.ERROR,errorMsg);
     }
 }

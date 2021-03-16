@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑用户</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/common.css" media="all">
+</head>
+<body>
+<form class="layui-form" action="" lay-filter="formData">
+    <br>
+    <div class="layui-tools" style="padding-left: 15px;">
+        <a href="#" class="layui-btn layui-btn-sm" lay-submit><i class="layui-icon layui-icon-ok"></i>保存</a>
+    </div>
+    <br>
+    <div class="layui-padding-15 auto-height">
+        <input type="hidden" id="id" name="id" th:value="${user.id}" class="layui-input">
+        <input type="hidden" id="avatar" name="avatar" th:value="${user.avatar}" class="layui-input">
+        <div class="headDiv">
+            <img id="head" th:src="${user.avatar}">
+            <button type="button" class="layui-btn" id="uploadHead">
+                <i class="layui-icon">&#xe67c;</i>上传头像
+            </button>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">登录名：</label>
+            <div class="layui-input-inline">
+                <input type="text" placeholder="登录名" th:value="${user.loginName}" name="loginName" lay-verify="required" autocomplete="off" class="layui-input" width="60px">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名：</label>
+            <div class="layui-input-inline">
+                <input type="text" placeholder="姓名" th:value="${user.userName}" name="userName" lay-verify="required" autocomplete="off" class="layui-input" width="60px">
+            </div>
+        </div>
+        <div th:if="${user.password == null || user.password == ''}" class="layui-form-item">
+            <label class="layui-form-label">密码：</label>
+            <div class="layui-input-inline">
+                <input type="password" placeholder="密码" value="123456" name="password" lay-verify="required|password" autocomplete="off" class="layui-input" width="60px">
+            </div>
+        </div>
+    </div>
+</form>
+</body>
+<script type="text/javascript" src="/layui/layui.js"></script>
+<script>
+    layui.use(['upload','form','layer'], function(){
+        var _upload = layui.upload, _form = layui.form, _layer = layui.layer;
+        var $ = layui.$;
+        //上传头像
+        var uploadInst = _upload.render({
+            elem: '#uploadHead' //绑定元素
+            ,url: '/userInfo/uploadUserHead' //上传接口
+            ,accept: 'images'
+            ,done: function(res){
+                //上传完毕回调
+                console.log(res)
+                if(res.code == "SUCCESS"){
+                    _layer.msg(res.message,{icon: 1});
+                    $("#head").attr("src", res.data);
+                    $("#avatar").val(res.data);
+                }else{
+                    _layer.msg(res.message,{icon: 2});
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+        _form.on("submit",function (data) {//保存点击监听
+            $.post("/userInfo/addOrUpdateUser",data.field,function(res) {
+                if(res.code == "SUCCESS"){
+                    _layer.msg(res.message,{icon: 1});
+                }else{
+                    _layer.msg(res.message,{icon: 2});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</html>

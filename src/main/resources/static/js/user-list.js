@@ -47,24 +47,46 @@ layui.use(['form' ,'table' ,'layer', 'laytpl'], function() {
             });
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
-        //监听性别操作
+        //监听启用禁用开关操作
         _form.on('switch(enableFlag)', function(obj){
-            layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+            let enableFlag = obj.value;
+            let id = obj.elem.id;
+            let data = {
+                id : id,
+                enableFlag :enableFlag
+            }
+            $.post("/userInfo/updateEnableFlag",data,function (res) {
+                if(res.code == "SUCCESS"){
+                    _layer.msg(res.message,{icon: 1});
+                    $("#"+id).val(res.data);
+                }else{
+                    _layer.msg(res.message,{icon: 2});
+                    reload();
+                }
+            })
         });
     };
     function add() { //新增
+        _layer.open({
+            title : '新增用户',
+            type : 2,
+            area: ['600px', '320px'],
+            end: function(){
+                reload();
+            },
+            content : '/userInfo/addOrUpdateUserPage'
+        })
     };
     function edit(id) { //编辑
-        layer.open({
-            type: 1,  //可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
-            title: ['我是标题', 'font-size:18px; color:orange;'],//数组第二项可以写任意css样式；如果你不想显示标题栏，你可以title: false
-            area: '500px',
-            content: $('#show_div')
+        _layer.open({
+            title : "编辑用户",
+            type : 2,
+            area: ['600px', '320px'],
+            end: function(){
+                reload();
+            },
+            content : '/userInfo/addOrUpdateUserPage?id='+ id
         });
-        // _layer.open({
-        //     type: 2,
-        //     content: '/userInfo/editUserPage?id='+id,
-        // })
     };
     function remove(ids) { //删除
         if(!$.isArray(ids)) {

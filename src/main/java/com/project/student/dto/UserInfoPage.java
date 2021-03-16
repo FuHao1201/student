@@ -15,6 +15,13 @@ import lombok.Data;
 @Data
 public class UserInfoPage extends PageModel<UserInfo> {
 
+    /**
+     * 登录名
+     */
     private String loginName;
 
+    /**
+     * 用户名
+     */
+    private String userName;
 }
