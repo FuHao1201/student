@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>用户列表</title>
+    <title>学院列表</title>
     <link rel="stylesheet" href="/layui/css/layui.css" media="all">
 </head>
 <body>
@@ -12,15 +12,15 @@
             <br>
             <div class="layui-form-item">
                 <div class="layui-col-md4">
-                    <label class="layui-form-label">登录名：</label>
+                    <label class="layui-form-label">学院名：</label>
                     <div class="layui-input-inline">
-                        <input type="text" placeholder="登录名" name="loginName" autocomplete="off" class="layui-input" width="60px">
+                        <input type="text" placeholder="学院名" name="name" autocomplete="off" class="layui-input" width="60px">
                     </div>
                 </div>
                 <div class="layui-col-md4">
-                    <label class="layui-form-label">姓名：</label>
+                    <label class="layui-form-label">入学年份：</label>
                     <div class="layui-input-inline">
-                        <input type="text" placeholder="姓名" name="userName" autocomplete="off" class="layui-input" width="60px">
+                        <input type="text" placeholder="入学年份" name="year" id="year" autocomplete="off" class="layui-input" width="60px" readonly>
                     </div>
                 </div>
                 <div class="layui-col-md4">
@@ -30,20 +30,20 @@
         </form>
     </div>
 </div>
-<table class="layui-table" lay-data="{height:520, url:'/userInfo/listPagedUser', page:true, id:'user',toolbar:'#tableToolbar',defaultToolbar: []}" lay-filter="user">
+<table class="layui-table" lay-data="{height:520, url:'/collegeInfo/listPagedCollege', page:true, id:'college',toolbar:'#tableToolbar',defaultToolbar: []}" lay-filter="college">
     <thead>
     <tr>
         <th lay-data="{type:'checkbox'}"></th>
         <th lay-data="{type:'numbers', width:80}">序号</th>
-        <th lay-data="{field:'loginName',align:'center'}">登录名</th>
-        <th lay-data="{field:'userName',align:'center'}">姓名</th>
-        <th lay-data="{field:'enableFlag',align:'center',templet: '#enable'}">启用状态</th>
+        <th lay-data="{field:'name',align:'center'}">学院名</th>
+        <th lay-data="{field:'year',align:'center'}">入学年份</th>
+        <th lay-data="{field:'createTime',align:'center',templet:function (d){return showTime(d.createTime);}}">创建时间</th>
         <th lay-data="{toolbar:'#toolbar', align:'center', fixed:'right'}">操作</th>
     </tr>
     </thead>
 </table>
 <script type="text/javascript" src="/layui/layui.js"></script>
-<script type="text/javascript" src="/js/user-list.js"></script>
+<script type="text/javascript" src="/js/college-list.js"></script>
 </body>
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
@@ -53,12 +53,8 @@
 </script>
 <script type="text/html" id="tableToolbar">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="add">新增用户</button>
-        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="removeBatch">删除用户</button>
+        <button class="layui-btn layui-btn-sm" lay-event="add">新增学院</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="removeBatch">删除学院</button>
     </div>
-</script>
-<script type="text/html" id="enable">
-    <!-- 这里的 checked 的状态只是演示 -->
-    <input type="checkbox" id="{{d.id}}" name="enableFlag" value="{{d.enableFlag}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="enableFlag" {{ d.enableFlag == 'Y' ? 'checked' : '' }}/>
 </script>
 </html>

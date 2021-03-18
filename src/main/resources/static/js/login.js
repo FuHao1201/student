@@ -18,25 +18,26 @@ layui.use(['form' ,'layer'], function() {
         	var val = $("#code").val().toLowerCase();
         	console.log(val)
         	var num = show_num.join("");
-        	if(val==''){
-        		_layer.msg('请输入验证码！',{icon: 0});
-            }else if(val == num){
-                $("#code").val('');
-                getCanvas(show_num);
-          		$.post("/userInfo/login",data.field,function(res) {
-          			console.log(res)
-          			if(res.code == "SUCCESS"){
-          				window.location.href="/userInfo/home";
-          			}else{
-          				_layer.msg(res.message,{icon: 2});
-          			}
-          		});
-               
-            }else{
-            	_layer.msg('验证码错误！请重新输入！',{icon: 2});
-                $("#code").val('');
-                getCanvas(show_num);
-            }
+            $("#code").val('');
+            getCanvas(show_num);
+            $.post("/userInfo/login",data.field,function(res) {
+                console.log(res)
+                if(res.code == "SUCCESS"){
+                    window.location.href="/userInfo/home";
+                }else{
+                    _layer.msg(res.message,{icon: 2});
+                }
+            });
+        	// if(val==''){
+        	// 	_layer.msg('请输入验证码！',{icon: 0});
+            // }else if(val == num){
+            //
+            //
+            // }else{
+            // 	_layer.msg('验证码错误！请重新输入！',{icon: 2});
+            //     $("#code").val('');
+            //     getCanvas(show_num);
+            // }
         	return false;
         });
     };

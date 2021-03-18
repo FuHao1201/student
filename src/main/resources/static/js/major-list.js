@@ -1,13 +1,19 @@
 /**
- * 用户列表
+ * 专业列表
  */
-layui.use(['form' ,'table' ,'layer', 'laytpl'], function() {
+layui.use(['form' ,'table' ,'layer', 'laydate'], function() {
     var $ = layui.$;
-    var _table = layui.table,_form = layui.form,_layer= layui.layer;
+    var _table = layui.table,_form = layui.form,_layer= layui.layer,_laydate = layui.laydate;
 
     function init() {
+        //年选择器
+        _laydate.render({
+            elem: '#year'
+            ,type: 'year'
+            ,trigger: 'click'
+        });
         // 单行监听
-        _table.on('tool(user)', function(obj){
+        _table.on('tool(major)', function(obj){
             var event = obj.event;
             var data = obj.data;
             if(event == 'reload') {
@@ -22,7 +28,7 @@ layui.use(['form' ,'table' ,'layer', 'laytpl'], function() {
             }
         });
         //工具栏监听
-        _table.on('toolbar(user)',function(obj){
+        _table.on('toolbar(major)',function(obj){
             console.log(obj)
             var event = obj.event;
             var data = obj.data;
@@ -35,56 +41,39 @@ layui.use(['form' ,'table' ,'layer', 'laytpl'], function() {
         });
         //查询点击监听
         _form.on('submit(SearchForm)', function(data){
-            _table.reload('user', {
+            _table.reload('major', {
                 page: {
                     layout: ['prev','page', 'next','count',],
                 },where: {
-                    userName : data.field.userName,
-                    loginName : data.field.loginName,
+                    name : data.field.name,
+                    collegeName : data.field.collegeName,
+                    year : data.field.year,
                     page : '1'
                 }
             });
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
-        //监听启用禁用开关操作
-        _form.on('switch(enableFlag)', function(obj){
-            let enableFlag = obj.value;
-            let id = obj.elem.id;
-            let data = {
-                id : id,
-                enableFlag :enableFlag
-            }
-            $.post("/userInfo/updateEnableFlag",data,function (res) {
-                if(res.code == "SUCCESS"){
-                    _layer.msg(res.message,{icon: 1});
-                    $("#"+id).val(res.data);
-                }else{
-                    _layer.msg(res.message,{icon: 2});
-                    reload();
-                }
-            })
-        });
     };
     function add() { //新增
         _layer.open({
-            title : '新增用户',
+            title : '新增专业',
             type : 2,
             area: ['600px', '320px'],
             end: function(){
                 reload();
             },
-            content : '/userInfo/addOrUpdateUserPage'
+            content : '/majorInfo/addOrUpdateMajorPage'
         })
     };
     function edit(id) { //编辑
         _layer.open({
-            title : "编辑用户",
+            title : "编辑专业",
             type : 2,
             area: ['600px', '320px'],
             end: function(){
                 reload();
             },
-            content : '/userInfo/addOrUpdateUserPage?id='+ id
+            content : '/majorInfo/addOrUpdateMajorPage?id='+ id
         });
     };
     function remove(ids) { //删除
@@ -94,7 +83,7 @@ layui.use(['form' ,'table' ,'layer', 'laytpl'], function() {
         _layer.confirm('确认是否删除？', {
             btn: ['确认','取消'] //按钮
         }, function(){
-            $.post("/userInfo/removeUser", {ids:ids}, function(res){
+            $.post("/collegeInfo/removeCollege", {ids:ids}, function(res){
                 var msg = res.message;
                 _layer.msg(msg, {icon: 1});
                 reload();
@@ -117,7 +106,7 @@ layui.use(['form' ,'table' ,'layer', 'laytpl'], function() {
         remove(ids);
     };
     function reload(condition) { // 重载列表
-        _table.reload('user',{
+        _table.reload('major',{
             page: {
                 layout: ['prev','page', 'next','count',],
             },where: {
@@ -128,7 +117,7 @@ layui.use(['form' ,'table' ,'layer', 'laytpl'], function() {
 
     $(function() {
         var flag = false;
-        _table.init('user', {
+        _table.init('major', {
             parseData: function(res){ //res 即为原始返回的数据
                 console.log(res)
                 if(res.data == null){
@@ -149,3 +138,25 @@ layui.use(['form' ,'table' ,'layer', 'laytpl'], function() {
         init();
     });
 })
+//时间转换函数
+function showTime(tempDate)
+{
+    if(tempDate == null){
+        return '';
+    }
+    var d = new Date(tempDate);
+    var year = d.getFullYear();
+    var month = d.getMonth();
+    month++;
+    var day = d.getDate();
+    var hours = d.getHours();
+    var minutes = d.getMinutes();
+    var seconds = d.getSeconds();
+    month = month<10 ? "0"+month:month;
+    day = day<10 ? "0"+day:day;
+    hours = hours<10 ? "0"+hours:hours;
+    minutes = minutes<10 ? "0"+minutes:minutes;
+    seconds = seconds<10 ? "0"+seconds:seconds;
+    var time = year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
+    return time;
+};

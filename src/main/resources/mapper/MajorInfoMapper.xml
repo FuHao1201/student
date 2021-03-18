@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.project.student.dao.CollegeInfoDao">
+<mapper namespace="com.project.student.dao.MajorInfoDao">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.project.student.domain.CollegeInfo">
+    <resultMap id="BaseResultMap" type="com.project.student.domain.MajorInfo">
         <id column="id" property="id" />
+        <result column="college_id" property="collegeId" />
         <result column="name" property="name" />
-        <result column="year" property="year" />
         <result column="create_time" property="createTime" />
         <result column="create_by" property="createBy" />
         <result column="last_update_time" property="lastUpdateTime" />
         <result column="last_update_by" property="lastUpdateBy" />
     </resultMap>
     <!-- 分页列表查询映射结果 -->
-    <resultMap id="BaseResultPageMap" type="com.project.student.domain.CollegeInfo" extends="BaseResultMap">
-
+    <resultMap id="BaseResultPageMap" type="com.project.student.domain.MajorInfo" extends="BaseResultMap">
+        <result column="collegeName" property="collegeName" />
+        <result column="year" property="year" />
     </resultMap>
-    <select id="listPagedCollege" resultMap="BaseResultPageMap">
-        select * from college_info a
+    <select id="listPagedMajor" resultMap="BaseResultPageMap">
+        select a.*,b.name collegeName,b.year from major_info a
+        inner join college_info b on a.college_id = b.id
         <where>
             1 = 1
             <if test="name != '' and name != null">
                 <bind name="name_pattern" value="'%' + name + '%'"/>
                 and a.name like #{name_pattern}
             </if>
+            <if test="collegeName != '' and collegeName != null">
+                <bind name="collegeName_pattern" value="'%' + collegeName + '%'"/>
+                and b.name like #{collegeName_pattern}
+            </if>
             <if test="year != '' and year != null">
-                and a.year = #{year}
+                and b.year = #{year}
             </if>
         </where>
     </select>

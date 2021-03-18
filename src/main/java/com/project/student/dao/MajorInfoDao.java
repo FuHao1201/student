@@ -2,6 +2,7 @@ package com.project.student.dao;
 
 import com.project.student.domain.MajorInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.project.student.dto.MajorInfoPage;
 
 /**
  * <p>
@@ -13,4 +14,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface MajorInfoDao extends BaseMapper<MajorInfo> {
 
+    /**
+     * 学院分页列表
+     * @param majorInfoPage 查询参数
+     * @return
+     */
+    MajorInfoPage listPagedMajor(MajorInfoPage majorInfoPage);
 }

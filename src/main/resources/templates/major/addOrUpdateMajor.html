@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑专业</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/common.css" media="all">
+</head>
+<body>
+<form class="layui-form" action="" lay-filter="formData">
+    <br>
+    <div class="layui-tools" style="padding-left: 15px;">
+        <a href="#" class="layui-btn layui-btn-sm" lay-submit><i class="layui-icon layui-icon-ok"></i>保存</a>
+    </div>
+    <br>
+    <div class="layui-padding-15 auto-height">
+        <input type="hidden" id="id" name="id" th:value="${major.id}" class="layui-input">
+        <div class="layui-form-item">
+            <label class="layui-form-label">入学年份：</label>
+            <div class="layui-input-inline">
+                <select name="year" placeholder="入学年份" lay-verify="required" th:value="${major.year}">
+                    <option value="">请选择年份</option>
+                    <option value="2020">2020</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">专业名：</label>
+            <div class="layui-input-inline">
+                <input type="text" placeholder="专业名" th:value="${major.name}" name="name" lay-verify="required" autocomplete="off" class="layui-input" width="60px">
+            </div>
+        </div>
+    </div>
+</form>
+</body>
+<script type="text/javascript" src="/layui/layui.js"></script>
+<script>
+    layui.use(['form','layer', 'laydate'], function(){
+        var _form = layui.form, _layer = layui.layer,_laydate = layui.laydate;
+        var $ = layui.$;
+        //年选择器
+        _laydate.render({
+            elem: '#year'
+            ,type: 'year'
+            ,trigger: 'click'
+        });
+        _form.on("submit",function (data) {//保存点击监听
+            $.post("/majorInfo/addOrUpdateMajor",data.field,function(res) {
+                if(res.code == "SUCCESS"){
+                    _layer.msg(res.message,{icon: 1});
+                }else{
+                    _layer.msg(res.message,{icon: 2});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</html>

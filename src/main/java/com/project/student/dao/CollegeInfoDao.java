@@ -2,6 +2,7 @@ package com.project.student.dao;
 
 import com.project.student.domain.CollegeInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.project.student.dto.CollegeInfoPage;
 
 /**
  * <p>
@@ -13,4 +14,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface CollegeInfoDao extends BaseMapper<CollegeInfo> {
 
+    /**
+     * 学院分页列表
+     * @param collegeInfoPage 查询参数
+     * @return
+     */
+    CollegeInfoPage listPagedCollege(CollegeInfoPage collegeInfoPage);
 }

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>用户列表</title>
+    <title>学生列表</title>
     <link rel="stylesheet" href="/layui/css/layui.css" media="all">
 </head>
 <body>
@@ -53,12 +53,8 @@
 </script>
 <script type="text/html" id="tableToolbar">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="add">新增用户</button>
-        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="removeBatch">删除用户</button>
+        <button class="layui-btn layui-btn-sm" lay-event="add">新增学生</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="removeBatch">删除学生</button>
     </div>
-</script>
-<script type="text/html" id="enable">
-    <!-- 这里的 checked 的状态只是演示 -->
-    <input type="checkbox" id="{{d.id}}" name="enableFlag" value="{{d.enableFlag}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="enableFlag" {{ d.enableFlag == 'Y' ? 'checked' : '' }}/>
 </script>
 </html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>专业列表</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+</head>
+<body>
+<div class="form-search-con layui-bg-white layui-fluid">
+    <div class="layui-row">
+        <form class="layui-form" id="searchForm" autocomplete="off">
+            <br>
+            <div class="layui-form-item">
+                <div class="layui-col-md3">
+                    <label class="layui-form-label">专业名：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" placeholder="专业名" name="name" autocomplete="off" class="layui-input" width="60px">
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <label class="layui-form-label">学院名：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" placeholder="学院名" name="collegeName" autocomplete="off" class="layui-input" width="60px">
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <label class="layui-form-label">入学年份：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" placeholder="入学年份" name="year" id="year" autocomplete="off" class="layui-input" width="60px" readonly>
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <button type="button" class="layui-btn" lay-submit lay-filter="SearchForm">查询</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<table class="layui-table" lay-data="{height:520, url:'/majorInfo/listPagedMajor', page:true, id:'major',toolbar:'#tableToolbar',defaultToolbar: []}" lay-filter="major">
+    <thead>
+    <tr>
+        <th lay-data="{type:'checkbox'}"></th>
+        <th lay-data="{type:'numbers', width:80}">序号</th>
+        <th lay-data="{field:'name',align:'center'}">专业名</th>
+        <th lay-data="{field:'year',align:'center'}">入学年份</th>
+        <th lay-data="{field:'collegeName',align:'center'}">学院名</th>
+        <th lay-data="{field:'createTime',align:'center',templet:function (d){return showTime(d.createTime);}}">创建时间</th>
+        <th lay-data="{toolbar:'#toolbar', align:'center', fixed:'right'}">操作</th>
+    </tr>
+    </thead>
+</table>
+<script type="text/javascript" src="/layui/layui.js"></script>
+<script type="text/javascript" src="/js/major-list.js"></script>
+</body>
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-xs" lay-event="update">修改</button>
+        <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove">删除</button>
+    </div>
+</script>
+<script type="text/html" id="tableToolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">新增专业</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="removeBatch">删除专业</button>
+    </div>
+</script>
+</html>

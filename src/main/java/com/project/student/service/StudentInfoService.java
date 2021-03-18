@@ -2,6 +2,7 @@ package com.project.student.service;
 
 import com.project.student.domain.StudentInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.project.student.dto.StudentInfoPage;
 
 /**
  * <p>
@@ -13,4 +14,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface StudentInfoService extends IService<StudentInfo> {
 
+    /**
+     * 学生分页列表
+     * @param studentInfoPage 查询参数
+     * @return
+     */
+    StudentInfoPage listPagedStudent(StudentInfoPage studentInfoPage);
 }

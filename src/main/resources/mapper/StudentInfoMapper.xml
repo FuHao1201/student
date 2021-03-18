@@ -18,4 +18,11 @@
         <result column="last_update_time" property="lastUpdateTime" />
         <result column="last_update_by" property="lastUpdateBy" />
     </resultMap>
+    <!-- 分页列表查询映射结果 -->
+    <resultMap id="BaseResultPageMap" type="com.project.student.domain.StudentInfo" extends="BaseResultMap">
+
+    </resultMap>
+    <select id="listPagedStudent" resultMap="BaseResultPageMap">
+
+    </select>
 </mapper>
