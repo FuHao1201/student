@@ -1,5 +1,5 @@
 /**
- * 专业列表
+ * 学生列表
  */
 layui.use(['form' ,'table' ,'layer', 'laydate'], function() {
     var $ = layui.$;
@@ -13,7 +13,7 @@ layui.use(['form' ,'table' ,'layer', 'laydate'], function() {
             ,trigger: 'click'
         });
         // 单行监听
-        _table.on('tool(major)', function(obj){
+        _table.on('tool(student)', function(obj){
             var event = obj.event;
             var data = obj.data;
             if(event == 'reload') {
@@ -28,7 +28,7 @@ layui.use(['form' ,'table' ,'layer', 'laydate'], function() {
             }
         });
         //工具栏监听
-        _table.on('toolbar(major)',function(obj){
+        _table.on('toolbar(student)',function(obj){
             console.log(obj)
             var event = obj.event;
             var data = obj.data;
@@ -41,12 +41,13 @@ layui.use(['form' ,'table' ,'layer', 'laydate'], function() {
         });
         //查询点击监听
         _form.on('submit(SearchForm)', function(data){
-            _table.reload('major', {
+            _table.reload('student', {
                 page: {
                     layout: ['prev','page', 'next','count',],
                 },where: {
                     name : data.field.name,
                     collegeName : data.field.collegeName,
+                    majorName : data.field.majorName,
                     year : data.field.year,
                     page : '1'
                 }
@@ -56,24 +57,24 @@ layui.use(['form' ,'table' ,'layer', 'laydate'], function() {
     };
     function add() { //新增
         _layer.open({
-            title : '新增专业',
+            title : '新增学生',
             type : 2,
-            area: ['600px', '320px'],
+            area: ['800px', '600px'],
             end: function(){
                 reload();
             },
-            content : '/majorInfo/addOrUpdateMajorPage'
+            content : '/studentInfo/addOrUpdateStudentPage'
         })
     };
     function edit(id) { //编辑
         _layer.open({
-            title : "编辑专业",
+            title : "编辑学生",
             type : 2,
-            area: ['600px', '320px'],
+            area: ['800px', '600px'],
             end: function(){
                 reload();
             },
-            content : '/majorInfo/addOrUpdateMajorPage?id='+ id
+            content : '/studentInfo/addOrUpdateStudentPage?id='+ id
         });
     };
     function remove(ids) { //删除
@@ -109,7 +110,7 @@ layui.use(['form' ,'table' ,'layer', 'laydate'], function() {
         remove(ids);
     };
     function reload(condition) { // 重载列表
-        _table.reload('major',{
+        _table.reload('student',{
             page: {
                 layout: ['prev','page', 'next','count',],
             },where: {
@@ -120,7 +121,7 @@ layui.use(['form' ,'table' ,'layer', 'laydate'], function() {
 
     $(function() {
         var flag = false;
-        _table.init('major', {
+        _table.init('student', {
             parseData: function(res){ //res 即为原始返回的数据
                 console.log(res)
                 if(res.data == null){

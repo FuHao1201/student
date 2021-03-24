@@ -2,10 +2,13 @@ package com.project.student.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.project.student.common.*;
 import com.project.student.domain.CollegeInfo;
+import com.project.student.domain.MajorInfo;
 import com.project.student.dto.CollegeInfoPage;
 import com.project.student.service.CollegeInfoService;
+import com.project.student.service.MajorInfoService;
 import com.sun.istack.internal.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
@@ -16,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>
@@ -31,6 +35,9 @@ public class CollegeInfoController extends BaseController {
 
     @Autowired
     private CollegeInfoService collegeInfoService;
+
+    @Autowired
+    private MajorInfoService majorInfoService;
 
     /**
      * 学院列表页面
@@ -62,10 +69,21 @@ public class CollegeInfoController extends BaseController {
      */
     @PostMapping("/removeCollege")
     public JsonResult removeCollege(@NotNull @RequestParam(value = "ids[]") String[] ids){
-        if(collegeInfoService.removeByIds(Arrays.asList(ids))) {
-            return jr(GlobalConstants.SUCCESS,"删除成功");
+        int notRemove = 0;
+        for (String id : ids){
+            //验证学院下是否存在专业
+            List<MajorInfo> majorInfos = majorInfoService.list(new LambdaQueryWrapper<MajorInfo>().eq(MajorInfo::getCollegeId,id));
+            if (CollUtil.isNotEmpty(majorInfos)){
+                notRemove ++;
+                continue;
+            }
+            collegeInfoService.removeById(id);
         }
-        return jr(GlobalConstants.ERROR,"删除失败");
+        if(notRemove == 0) {
+            return jr(GlobalConstants.SUCCESS,"删除成功");
+        }else {
+            return jr(GlobalConstants.ERROR,"有"+notRemove+"个学院存在专业");
+        }
     }
 
     /**
@@ -96,13 +114,41 @@ public class CollegeInfoController extends BaseController {
         if (ObjectUtil.isNotEmpty(collegeInfo.getId())){
             collegeInfo.setLastUpdateBy(CurrentUser.getUser().getUserInfo().getId());
             collegeInfo.setLastUpdateTime(LocalDateTime.now());
+            CollegeInfo collegeOld = collegeInfoService.getOne(new LambdaQueryWrapper<CollegeInfo>().eq(CollegeInfo::getYear,collegeInfo.getYear()).eq(CollegeInfo::getName,collegeInfo.getName()).ne(CollegeInfo::getId,collegeInfo.getId()));
+            if (collegeOld != null){
+                return jr(GlobalConstants.ERROR,"学院已经存在");
+            }
         }else {
             collegeInfo.setCreateBy(CurrentUser.getUser().getUserInfo().getId());
             collegeInfo.setCreateTime(LocalDateTime.now());
+            CollegeInfo collegeOld = collegeInfoService.getOne(new LambdaQueryWrapper<CollegeInfo>().eq(CollegeInfo::getYear,collegeInfo.getYear()).eq(CollegeInfo::getName,collegeInfo.getName()));
+            if (collegeOld != null){
+                return jr(GlobalConstants.ERROR,"学院已经存在");
+            }
         }
         if (collegeInfoService.saveOrUpdate(collegeInfo)){
             return jr(GlobalConstants.SUCCESS,"编辑学院成功");
         }
         return jr(GlobalConstants.ERROR,"编辑学院失败");
+    }
+
+    /**
+     * 获取所有年份
+     * @return
+     */
+    @GetMapping("/getAllYear")
+    @ResponseBody
+    public JsonResult<List<CollegeInfo>> getAllYear(){
+        return jr(collegeInfoService.getAllYear());
+    }
+
+    /**
+     * 根据年份获取学院名称
+     * @return
+     */
+    @GetMapping("/getCollege")
+    @ResponseBody
+    public JsonResult<List<CollegeInfo>> getCollege(Integer year){
+        return jr(collegeInfoService.list(new LambdaQueryWrapper<CollegeInfo>().eq(CollegeInfo::getYear,year)));
     }
 }

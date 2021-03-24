@@ -83,8 +83,11 @@ layui.use(['form' ,'table' ,'layer', 'laydate'], function() {
             btn: ['确认','取消'] //按钮
         }, function(){
             $.post("/collegeInfo/removeCollege", {ids:ids}, function(res){
-                var msg = res.message;
-                _layer.msg(msg, {icon: 1});
+                if(res.code == "SUCCESS"){
+                    _layer.msg(res.message,{icon: 1});
+                }else{
+                    _layer.msg(res.message,{icon: 2});
+                }
                 reload();
             })
         }, function(){

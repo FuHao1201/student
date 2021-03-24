@@ -4,6 +4,8 @@ import com.project.student.domain.CollegeInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.project.student.dto.CollegeInfoPage;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -20,4 +22,6 @@ public interface CollegeInfoDao extends BaseMapper<CollegeInfo> {
      * @return
      */
     CollegeInfoPage listPagedCollege(CollegeInfoPage collegeInfoPage);
+
+    List<CollegeInfo> getAllYear();
 }

@@ -4,6 +4,8 @@ import com.project.student.domain.CollegeInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.project.student.dto.CollegeInfoPage;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -20,4 +22,6 @@ public interface CollegeInfoService extends IService<CollegeInfo> {
      * @return
      */
     CollegeInfoPage listPagedCollege(CollegeInfoPage collegeInfoPage);
+
+    List<CollegeInfo> getAllYear();
 }

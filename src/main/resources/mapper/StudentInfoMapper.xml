@@ -20,9 +20,31 @@
     </resultMap>
     <!-- 分页列表查询映射结果 -->
     <resultMap id="BaseResultPageMap" type="com.project.student.domain.StudentInfo" extends="BaseResultMap">
-
+        <result column="major_name" property="majorName" />
+        <result column="college_name" property="collegeName" />
+        <result column="year" property="year" />
     </resultMap>
     <select id="listPagedStudent" resultMap="BaseResultPageMap">
-
+        select a.*,b.name major_name,c.name college_name,c.year from student_info a
+        inner join major_info b on a.major_id = b.id
+        inner join college_info c on b.college_id = c.id
+        <where>
+            1 = 1
+            <if test="majorName != '' and majorName != null">
+                <bind name="majorName_pattern" value="'%' + majorName + '%'"/>
+                and c.name like #{majorName_pattern}
+            </if>
+            <if test="collegeName != '' and collegeName != null">
+                <bind name="collegeName_pattern" value="'%' + collegeName + '%'"/>
+                and b.name like #{collegeName_pattern}
+            </if>
+            <if test="name != '' and name != null">
+                <bind name="name_pattern" value="'%' + name + '%'"/>
+                and a.name like #{name_pattern}
+            </if>
+            <if test="year != '' and year != null">
+                and c.year = #{year}
+            </if>
+        </where>
     </select>
 </mapper>

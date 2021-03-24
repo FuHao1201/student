@@ -29,4 +29,7 @@
             </if>
         </where>
     </select>
+    <select id="getAllYear" resultMap="BaseResultMap">
+        select distinct a.year from college_info a order by a.year desc
+    </select>
 </mapper>

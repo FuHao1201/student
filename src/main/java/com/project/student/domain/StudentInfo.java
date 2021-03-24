@@ -2,6 +2,8 @@ package com.project.student.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
@@ -81,4 +83,22 @@ public class StudentInfo implements Serializable {
      * 最后一次修改人id
      */
     private Integer lastUpdateBy;
+
+    /**
+     * 专业名称
+     */
+    @TableField(exist = false)
+    private String majorName;
+
+    /**
+     * 学院名称
+     */
+    @TableField(exist = false)
+    private String collegeName;
+
+    /**
+     * 入学年份
+     */
+    @TableField(exist = false)
+    private String year;
 }

@@ -7,6 +7,8 @@ import com.project.student.service.CollegeInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务实现类
@@ -21,5 +23,10 @@ public class CollegeInfoServiceImpl extends ServiceImpl<CollegeInfoDao, CollegeI
     @Override
     public CollegeInfoPage listPagedCollege(CollegeInfoPage collegeInfoPage) {
         return getBaseMapper().listPagedCollege(collegeInfoPage);
+    }
+
+    @Override
+    public List<CollegeInfo> getAllYear() {
+        return getBaseMapper().getAllYear();
     }
 }

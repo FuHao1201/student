@@ -3,16 +3,19 @@ package com.project.student.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.project.student.common.BaseController;
 import com.project.student.common.CurrentUser;
 import com.project.student.common.GlobalConstants;
 import com.project.student.common.JsonResult;
 import com.project.student.domain.CollegeInfo;
 import com.project.student.domain.MajorInfo;
+import com.project.student.domain.StudentInfo;
 import com.project.student.dto.CollegeInfoPage;
 import com.project.student.dto.MajorInfoPage;
 import com.project.student.service.CollegeInfoService;
 import com.project.student.service.MajorInfoService;
+import com.project.student.service.StudentInfoService;
 import com.sun.istack.internal.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
@@ -22,7 +25,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>
@@ -41,6 +46,9 @@ public class MajorInfoController extends BaseController {
 
     @Autowired
     private CollegeInfoService collegeInfoService;
+
+    @Autowired
+    private StudentInfoService studentInfoService;
 
     /**
      * 专业列表页面
@@ -72,10 +80,21 @@ public class MajorInfoController extends BaseController {
      */
     @PostMapping("/removeMajor")
     public JsonResult removeMajor(@NotNull @RequestParam(value = "ids[]") String[] ids){
-        if(majorInfoService.removeByIds(Arrays.asList(ids))) {
-            return jr(GlobalConstants.SUCCESS,"删除成功");
+        int notRemove = 0;
+        for (String id : ids){
+            //验证专业下是否存在学生
+            List<StudentInfo> studentInfos = studentInfoService.list(new LambdaQueryWrapper<StudentInfo>().eq(StudentInfo::getMajorId,id));
+            if (CollUtil.isNotEmpty(studentInfos)){
+                notRemove ++;
+                continue;
+            }
+            majorInfoService.removeById(id);
         }
-        return jr(GlobalConstants.ERROR,"删除失败");
+        if(notRemove == 0) {
+            return jr(GlobalConstants.SUCCESS,"删除成功");
+        }else {
+            return jr(GlobalConstants.ERROR,"有"+notRemove+"个专业存在学生");
+        }
     }
 
     /**
@@ -86,17 +105,21 @@ public class MajorInfoController extends BaseController {
      */
     @GetMapping("/addOrUpdateMajorPage")
     public ModelAndView addOrUpdateMajorPage(ModelMap model, Integer id) {
+        List<CollegeInfo> colleges = new ArrayList<>();
         if (ObjectUtil.isNotEmpty(id)){
             MajorInfo majorInfo = majorInfoService.getById(id);
             CollegeInfo collegeInfo = collegeInfoService.getById(majorInfo.getCollegeId());
             if (collegeInfo != null){
                 majorInfo.setCollegeName(collegeInfo.getName());
                 majorInfo.setYear(collegeInfo.getYear());
+                colleges = collegeInfoService.list(new LambdaQueryWrapper<CollegeInfo>().eq(CollegeInfo::getYear,collegeInfo.getYear()));
             }
             model.put("major", majorInfo);
         }else {
             model.put("major", new MajorInfo());
         }
+        model.put("years", collegeInfoService.getAllYear());
+        model.put("colleges", colleges);
         return view("major/addOrUpdateMajor", model);
     }
 
@@ -114,10 +137,14 @@ public class MajorInfoController extends BaseController {
         }else {
             majorInfo.setCreateBy(CurrentUser.getUser().getUserInfo().getId());
             majorInfo.setCreateTime(LocalDateTime.now());
+            MajorInfo majorOld = majorInfoService.getOne(new LambdaQueryWrapper<MajorInfo>().eq(MajorInfo::getCollegeId,majorInfo.getCollegeId()).eq(MajorInfo::getName,majorInfo.getName()));
+            if (majorOld != null){
+                return jr(GlobalConstants.ERROR,"专业已存在");
+            }
         }
         if (majorInfoService.saveOrUpdate(majorInfo)){
-            return jr(GlobalConstants.SUCCESS,"编辑学院成功");
+            return jr(GlobalConstants.SUCCESS,"编辑专业成功");
         }
-        return jr(GlobalConstants.ERROR,"编辑学院失败");
+        return jr(GlobalConstants.ERROR,"编辑专业失败");
     }
 }

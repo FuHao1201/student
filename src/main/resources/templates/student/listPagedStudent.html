@@ -7,20 +7,34 @@
 </head>
 <body>
 <div class="form-search-con layui-bg-white layui-fluid">
-    <div class="layui-row layui-col-md-offset2">
+    <div class="layui-row">
         <form class="layui-form" id="searchForm" autocomplete="off">
             <br>
             <div class="layui-form-item">
                 <div class="layui-col-md4">
-                    <label class="layui-form-label">登录名：</label>
+                    <label class="layui-form-label">学院名：</label>
                     <div class="layui-input-inline">
-                        <input type="text" placeholder="登录名" name="loginName" autocomplete="off" class="layui-input" width="60px">
+                        <input type="text" placeholder="学院名" name="collegeName" autocomplete="off" class="layui-input" width="60px">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">专业名：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" placeholder="专业名" name="majorName" autocomplete="off" class="layui-input" width="60px">
                     </div>
                 </div>
                 <div class="layui-col-md4">
                     <label class="layui-form-label">姓名：</label>
                     <div class="layui-input-inline">
-                        <input type="text" placeholder="姓名" name="userName" autocomplete="off" class="layui-input" width="60px">
+                        <input type="text" placeholder="姓名" name="name" autocomplete="off" class="layui-input" width="60px">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-col-md3">
+                    <label class="layui-form-label">入学年份：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" placeholder="入学年份" name="year" id="year" autocomplete="off" class="layui-input" width="60px" readonly>
                     </div>
                 </div>
                 <div class="layui-col-md4">
@@ -30,20 +44,22 @@
         </form>
     </div>
 </div>
-<table class="layui-table" lay-data="{height:520, url:'/userInfo/listPagedUser', page:true, id:'user',toolbar:'#tableToolbar',defaultToolbar: []}" lay-filter="user">
+<table class="layui-table" lay-data="{height:520, url:'/studentInfo/listPagedStudent', page:true, id:'student',toolbar:'#tableToolbar',defaultToolbar: []}" lay-filter="student">
     <thead>
     <tr>
         <th lay-data="{type:'checkbox'}"></th>
         <th lay-data="{type:'numbers', width:80}">序号</th>
-        <th lay-data="{field:'loginName',align:'center'}">登录名</th>
-        <th lay-data="{field:'userName',align:'center'}">姓名</th>
-        <th lay-data="{field:'enableFlag',align:'center',templet: '#enable'}">启用状态</th>
+        <th lay-data="{field:'name',align:'center'}">姓名</th>
+        <th lay-data="{field:'schoolNumber',align:'center'}">学号</th>
+        <th lay-data="{field:'majorName',align:'center',templet: '#enable'}">专业</th>
+        <th lay-data="{field:'collegeName',align:'center',templet: '#enable'}">学院</th>
+        <th lay-data="{field:'year',align:'center',templet: '#enable'}">入学年份</th>
         <th lay-data="{toolbar:'#toolbar', align:'center', fixed:'right'}">操作</th>
     </tr>
     </thead>
 </table>
 <script type="text/javascript" src="/layui/layui.js"></script>
-<script type="text/javascript" src="/js/user-list.js"></script>
+<script type="text/javascript" src="/js/student-list.js"></script>
 </body>
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
