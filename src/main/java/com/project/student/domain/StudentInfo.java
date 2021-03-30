@@ -47,7 +47,7 @@ public class StudentInfo implements Serializable {
     /**
      * 出生日期
      */
-    private LocalDate birthday;
+    private String birthday;
 
     /**
      * 身份证号码
@@ -101,4 +101,10 @@ public class StudentInfo implements Serializable {
      */
     @TableField(exist = false)
     private String year;
+
+    /**
+     * 学院id
+     */
+    @TableField(exist = false)
+    private Integer collegeId;
 }

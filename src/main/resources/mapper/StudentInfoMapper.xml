@@ -17,6 +17,10 @@
         <result column="create_by" property="createBy" />
         <result column="last_update_time" property="lastUpdateTime" />
         <result column="last_update_by" property="lastUpdateBy" />
+        <result column="major_name" property="majorName" />
+        <result column="college_name" property="collegeName" />
+        <result column="year" property="year" />
+        <result column="college_id" property="collegeId" />
     </resultMap>
     <!-- 分页列表查询映射结果 -->
     <resultMap id="BaseResultPageMap" type="com.project.student.domain.StudentInfo" extends="BaseResultMap">
@@ -42,9 +46,22 @@
                 <bind name="name_pattern" value="'%' + name + '%'"/>
                 and a.name like #{name_pattern}
             </if>
+            <if test="schoolNumber != '' and schoolNumber != null">
+                <bind name="schoolNumber_pattern" value="'%' + schoolNumber + '%'"/>
+                and a.school_number like #{schoolNumber_pattern}
+            </if>
             <if test="year != '' and year != null">
                 and c.year = #{year}
             </if>
+        </where>
+    </select>
+    <select id="getStudentById" resultMap="BaseResultMap">
+        select a.*,b.name major_name,b.college_id,c.name college_name,c.year
+        from student_info a
+        inner join major_info b on a.major_id = b.id
+        inner join college_info c on b.college_id = c.id
+        <where>
+            a.id = #{id}
         </where>
     </select>
 </mapper>

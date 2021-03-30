@@ -4,9 +4,9 @@ server:
 spring:
   datasource:
     name: student
-    url: jdbc:mysql://localhost:3306/student?useSSL=false
+    url: jdbc:mysql://49.232.29.113:3306/student?useSSL=false
     username: root
-    password:
+    password: 123456
   mvc:
     static-path-pattern: /**
   resources:

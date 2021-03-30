@@ -20,4 +20,11 @@ public interface StudentInfoService extends IService<StudentInfo> {
      * @return
      */
     StudentInfoPage listPagedStudent(StudentInfoPage studentInfoPage);
+
+    /**
+     * 根据学生id获取学生信息
+     * @param id 学生id
+     * @return
+     */
+    StudentInfo getStudentById(Integer id);
 }

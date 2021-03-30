@@ -147,4 +147,14 @@ public class MajorInfoController extends BaseController {
         }
         return jr(GlobalConstants.ERROR,"编辑专业失败");
     }
+
+    /**
+     * 根据年份获取学院名称
+     * @return
+     */
+    @GetMapping("/getMajor")
+    @ResponseBody
+    public JsonResult<List<MajorInfo>> getMajor(Integer collegeId){
+        return jr(majorInfoService.list(new LambdaQueryWrapper<MajorInfo>().eq(MajorInfo::getCollegeId,collegeId)));
+    }
 }

@@ -22,4 +22,9 @@ public class StudentInfoServiceImpl extends ServiceImpl<StudentInfoDao, StudentI
     public StudentInfoPage listPagedStudent(StudentInfoPage studentInfoPage) {
         return getBaseMapper().listPagedStudent(studentInfoPage);
     }
+
+    @Override
+    public StudentInfo getStudentById(Integer id) {
+        return getBaseMapper().getStudentById(id);
+    }
 }

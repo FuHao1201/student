@@ -27,4 +27,8 @@ public class StudentInfoPage extends PageModel<StudentInfo> {
      */
     private String year;
 
+    /**
+     * 学号
+     */
+    private String schoolNumber;
 }

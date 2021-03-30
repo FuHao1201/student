@@ -49,6 +49,7 @@ layui.use(['form' ,'table' ,'layer', 'laydate'], function() {
                     collegeName : data.field.collegeName,
                     majorName : data.field.majorName,
                     year : data.field.year,
+                    schoolNumber : data.field.schoolNumber,
                     page : '1'
                 }
             });
@@ -59,7 +60,7 @@ layui.use(['form' ,'table' ,'layer', 'laydate'], function() {
         _layer.open({
             title : '新增学生',
             type : 2,
-            area: ['800px', '600px'],
+            area: ['800px', '500px'],
             end: function(){
                 reload();
             },
@@ -70,7 +71,7 @@ layui.use(['form' ,'table' ,'layer', 'laydate'], function() {
         _layer.open({
             title : "编辑学生",
             type : 2,
-            area: ['800px', '600px'],
+            area: ['800px', '500px'],
             end: function(){
                 reload();
             },

@@ -14,29 +14,68 @@
     </div>
     <br>
     <div class="layui-padding-15 auto-height">
-        <input type="hidden" id="id" name="id" th:value="${major.id}" class="layui-input">
-        <input type="hidden" id="yearOld" th:value="${major.year}" class="layui-input">
+        <input type="hidden" id="id" name="id" th:value="${student.id}" class="layui-input">
+        <input type="hidden" id="yearOld" th:value="${student.year}" class="layui-input">
+        <input type="hidden" id="sexOld" th:value="${student.sex}" class="layui-input">
+        <input type="hidden" id="schoolNumberOld" th:value="${student.schoolNumber}" class="layui-input">
         <div class="layui-form-item">
-            <label class="layui-form-label">入学年份：</label>
+            <label class="layui-form-label">专业：</label>
             <div class="layui-input-inline layui-form" lay-filter="yearDiv">
-                <select name="year" id="year" placeholder="入学年份" lay-filter="year" lay-verify="required" th:value="${major.year}">
+                <select name="year" id="year" placeholder="入学年份" lay-filter="year" lay-verify="required" th:value="${student.year}">
                     <option value="">请选择入学年份</option>
                     <option th:each="year,yearStat:${years}" th:value="${year.year}" th:text="${year.year}"></option>
                 </select>
             </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">学院名称：</label>
             <div class="layui-input-inline layui-form" lay-filter="collegeId">
-                <select name="collegeId" id="collegeId" placeholder="学院名称" lay-verify="required" th:value="${major.collegeId}">
+                <select name="collegeId" id="collegeId" placeholder="学院名称" lay-filter="college" lay-verify="required" th:value="${student.collegeId}">
                     <option th:each="college,collegeStat:${colleges}" th:value="${college.id}" th:text="${college.name}"></option>
                 </select>
             </div>
+            <div class="layui-input-inline layui-form" lay-filter="majorId">
+                <select name="majorId" id="majorId" placeholder="专业名称" lay-verify="required" th:value="${student.majorId}">
+                    <option th:each="major,majorStat:${majors}" th:value="${major.id}" th:text="${major.name}"></option>
+                </select>
+            </div>
+        </div>
+        <br>
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名：</label>
+            <div class="layui-input-inline">
+                <input type="text" placeholder="姓名" th:value="${student.name}" name="name" lay-verify="required" autocomplete="off" class="layui-input" width="60px">
+            </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">专业名：</label>
+            <label class="layui-form-label">性别：</label>
+            <div class="layui-input-inline layui-form" lay-filter="sexDiv">
+                <select name="sex" id="sex" placeholder="性别" lay-verify="required" th:value="${student.sex}">
+                    <option value="">请选择</option>
+                    <option value="man">男</option>
+                    <option value="woman">女</option>
+                </select>
+            </div>
+            <label class="layui-form-label">学号：</label>
             <div class="layui-input-inline">
-                <input type="text" placeholder="专业名" th:value="${major.name}" name="name" lay-verify="required" autocomplete="off" class="layui-input" width="60px">
+                <input type="text" placeholder="学号" th:value="${student.schoolNumber}" id="schoolNumber" name="schoolNumber" lay-verify="required|number" autocomplete="off" class="layui-input" width="60px">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">出生日期：</label>
+            <div class="layui-input-inline">
+                <input type="text" placeholder="出生日期" th:value="${student.birthday}" name="birthday" id="birthday" lay-verify="required" autocomplete="off" class="layui-input" width="60px" readonly>
+            </div>
+            <label class="layui-form-label">身份证号：</label>
+            <div class="layui-input-inline">
+                <input type="text" placeholder="身份证号" th:value="${student.identity}" name="identity" lay-verify="required|identity" autocomplete="off" class="layui-input" width="60px">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">籍贯：</label>
+            <div class="layui-input-inline">
+                <input type="text" placeholder="籍贯" th:value="${student.place}" name="place" lay-verify="required" autocomplete="off" class="layui-input" width="60px">
+            </div>
+            <label class="layui-form-label">民族：</label>
+            <div class="layui-input-inline">
+                <input type="text" placeholder="民族" th:value="${student.nation}" name="nation" lay-verify="required" autocomplete="off" class="layui-input" width="60px">
             </div>
         </div>
     </div>
@@ -53,8 +92,27 @@
             ,type: 'year'
             ,trigger: 'click'
         });
+        //年选择器
+        _laydate.render({
+            elem: '#birthday'
+            ,type: 'date'
+            ,trigger: 'click'
+        });
         _form.on("submit",function (data) {//保存点击监听
-            $.post("/majorInfo/addOrUpdateMajor",data.field,function(res) {
+            let schoolNumberOld = $("#schoolNumberOld").val();
+            let flag = false;
+            if (schoolNumberOld != data.field.schoolNumber){
+                $.post("/studentInfo/compareSchoolNum",{schoolNumber : data.field.schoolNumber},function (res) {
+                    if(res.code == "ERROR"){
+                        _layer.tips('学号已被使用', '#schoolNumber', {tips: 1});
+                        flag = true;
+                    }
+                })
+            }
+            if (flag){
+                return ;
+            }
+            $.post("/studentInfo/addOrUpdateStudent",data.field,function(res) {
                 if(res.code == "SUCCESS"){
                     _layer.msg(res.message,{icon: 1});
                 }else{
@@ -63,10 +121,36 @@
             });
             return false;
         });
-        //下拉框监听
+        //年份下拉框监听
         _form.on('select(year)',function(data){
             getCollege(data.value);
         });
+
+        $("#schoolNumber").on("input",function(e){
+            let schoolNumberOld = $("#schoolNumberOld").val();
+            if (schoolNumberOld == e.delegateTarget.value){
+                return;
+            }
+            $.post("/studentInfo/compareSchoolNum",{schoolNumber : e.delegateTarget.value},function (res) {
+                if(res.code == "ERROR"){
+                    _layer.tips('学号已被使用', '#schoolNumber', {tips: 1});
+                }
+            })
+        });
+        //学院下拉框监听
+        _form.on('select(college)',function(data){
+            getMajor(data.value);
+        });
+
+        //年份下拉框监听
+        _form.on('select(year)',function(data){
+            getCollege(data.value);
+        });
+
+        if ($("#sexOld").val() != '' && $("#sexOld").val() != null){
+            $("#sex").val($("#sexOld").val());
+            _form.render('select','sexDiv');
+        }
 
         if ($("#yearOld").val() != '' && $("#yearOld").val() != null){
             $("#year").val($("#yearOld").val());
@@ -76,11 +160,24 @@
         function getCollege(year) {
             $.get("/collegeInfo/getCollege",{year : year},function (res) {
                 $('#collegeId').html('');
+                $('#majorId').html('');
                 $('#collegeId').append(new Option("请选择学院", ''));
                 for (let i = 0; i < res.data.length; i++) {
                     $('#collegeId').append(new Option(res.data[i].name, res.data[i].id)); // 第一个是显示的文本，第二个是key值
                 }
                 _form.render('select','collegeId');
+                _form.render('select','majorId');
+            })
+        };
+
+        function getMajor(collegeId) {
+            $.get("/majorInfo/getMajor",{collegeId : collegeId},function (res) {
+                $('#majorId').html('');
+                $('#majorId').append(new Option("请选择专业", ''));
+                for (let i = 0; i < res.data.length; i++) {
+                    $('#majorId').append(new Option(res.data[i].name, res.data[i].id)); // 第一个是显示的文本，第二个是key值
+                }
+                _form.render('select','majorId');
             })
         };
     });
