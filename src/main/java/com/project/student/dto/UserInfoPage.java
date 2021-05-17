@@ -9,7 +9,7 @@ import lombok.Data;
  *  用户信息分页实体类
  * </p>
  *
- * @author YL
+ * @author FuHao
  * @since 2021-02-27
  */
 @Data

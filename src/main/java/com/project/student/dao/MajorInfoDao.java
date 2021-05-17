@@ -9,7 +9,7 @@ import com.project.student.dto.MajorInfoPage;
  *  Mapper 接口
  * </p>
  *
- * @author YM
+ * @author FuHao
  * @since 2021-02-27
  */
 public interface MajorInfoDao extends BaseMapper<MajorInfo> {

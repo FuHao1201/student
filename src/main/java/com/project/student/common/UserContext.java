@@ -8,7 +8,7 @@ import lombok.Data;
  *  当前用户信息
  * </p>
  *
- * @author YL
+ * @author FuHao
  * @since 2021-02-27
  */
 @Data

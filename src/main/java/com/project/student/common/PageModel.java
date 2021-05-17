@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
  *  分页参数类
  * </p>
  *
- * @author YL
+ * @author FuHao
  * @since 2021-02-27
  */
 public class PageModel<T> extends Page<T> {

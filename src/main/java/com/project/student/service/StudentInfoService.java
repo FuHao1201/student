@@ -9,7 +9,7 @@ import com.project.student.dto.StudentInfoPage;
  *  服务类
  * </p>
  *
- * @author YM
+ * @author FuHao
  * @since 2021-02-27
  */
 public interface StudentInfoService extends IService<StudentInfo> {
